@@ -1,83 +1,84 @@
-import { evaluate } from "mathjs";
-import { useState, useEffect } from "react";
+import { useState } from 'react';
+import { create, all } from 'mathjs';
+
+const math = create(all);
 
 export const useCalculator = () => {
-    const [expression, setExpression] = useState("");
-    const [result, setResult] = useState("");
+  const [expression, setExpression] = useState("");
+  const [result, setResult] = useState("");
 
-    useEffect(() => {
-        if (expression) {
-            try {
-                // Symbols ko mathjs compatible banane ke liye advanced replacement
-                const mathExpression = expression
-                    .replace(/÷/g, "/")
-                    .replace(/×/g, "*")
-                    .replace(/−/g, "-")
-                    .replace(/π/g, "PI")
-                    .replace(/e/g, "E")
-                    .replace(/x²/g, "^2")     // Square logic
-                    .replace(/yˣ/g, "^")      // Power logic
-                    .replace(/√/g, "sqrt")    // Square root
-                    .replace(/log/g, "log10") // Common log
-                    .replace(/ln/g, "log");   // Natural log
-
-                const solved = evaluate(mathExpression);
-                
-                // Agar result valid number hai toh hi set karein
-                if (typeof solved === 'number' || typeof solved === 'object') {
-                    setResult(String(solved));
-                }
-            } catch {
-                // User jab type kar raha hota hai toh expression incomplete ho sakta hai
-                setResult(""); 
-            }
-        } else {
-            setResult("");
-        }
-    }, [expression]);
-
-    const addToExpression = (val) => {
-        // Special cases for buttons with complex labels
-        let valToAdd = val;
-        if (val === "x²") valToAdd = "²";
-        if (val === "yˣ") valToAdd = "^";
-        if (val === "sin") valToAdd = "sin(";
-        if (val === "cos") valToAdd = "cos(";
-        if (val === "tan") valToAdd = "tan(";
-
-        if (expression === "Error") {
-            setExpression(valToAdd);
-        } else {
-            setExpression((prev) => prev + valToAdd);
-        }
+  const addToExpression = (value) => {
+    // Mapping symbols to MathJS format
+    const mapping = {
+      '×': '*', 
+      '÷': '/', 
+      '−': '-', 
+      'π': 'pi', 
+      'e': 'e',
+      'log': 'log10(', 
+      'ln': 'log(', 
+      'sin': 'sin(', 
+      'cos': 'cos(',
+      'tan': 'tan(', 
+      '√': 'sqrt(', 
+      'x!': '!',
+      'exp': 'exp(',
+      'x²': '^2',
+      'yˣ': '^',
+      'mod': ' mod ',
+      'rnd': 'random()'
     };
 
-    const clearExpression = () => {
-        setExpression("");
+    const val = mapping[value] || value;
+    
+    // Agar result pehle se error show kar raha hai, toh naya type karne par clear kar do
+    if (result === "Syntax Error" || result === "Math Error") {
         setResult("");
-    };
+    }
 
-    const deleteLast = () => {
-        if (expression.length > 0) {
-            setExpression(expression.slice(0, -1));
-        }
-    };
+    setExpression((prev) => prev + val);
+  };
 
-    const calculateResult = () => {
-        if (result && result !== "Error") {
-            // Chrome style: Jab = dabe, toh result hi expression ban jaye
-            setExpression(result);
-            setResult("");
-        }
-    };
+  const calculateResult = () => {
+    if (!expression) return;
+    
+    try {
+      // Step 1: Automatically close brackets agar user bhool gaya hai
+      let finalExpr = expression;
+      const openBrackets = (finalExpr.match(/\(/g) || []).length;
+      const closeBrackets = (finalExpr.match(/\)/g) || []).length;
+      
+      for (let i = 0; i < openBrackets - closeBrackets; i++) {
+        finalExpr += ")";
+      }
 
-    return { 
-        expression, 
-        result, 
-        addToExpression, 
-        clearExpression, 
-        deleteLast, 
-        calculateResult 
-    };
+      // Step 2: Evaluate using mathjs
+      const evalResult = math.evaluate(finalExpr);
+      
+      // Step 3: Handle Infinity or NaN
+      if (!isFinite(evalResult)) {
+        setResult("Math Error");
+      } else {
+        // Limit decimals for clean look
+        const formatted = math.format(evalResult, { precision: 10 });
+        setResult(formatted.toString());
+      }
+    } catch (error) {
+      setResult("Syntax Error");
+      console.error("MathJS Error:", error);
+    }
+  };
+
+  const clearExpression = () => {
+    setExpression("");
+    setResult("");
+  };
+
+  const deleteLast = () => {
+    setExpression((prev) => prev.slice(0, -1));
+  };
+
+  return { expression, result, addToExpression, clearExpression, deleteLast, calculateResult };
 };
+
 export default useCalculator;

@@ -1,12 +1,12 @@
 import Button from "./Button";
 
-const Keypad = ({ onAction, onCalculate, onClear }) => {
+const Keypad = ({ onAction, onCalculate, onClear, onDelete }) => { // onDelete yahan add kiya
   const numericKeys = ["7", "8", "9", "4", "5", "6", "1", "2", "3", ".", "0", "="];
   const operatorKeys = ["⌫", "AC", "÷", "×", "−", "+"];
 
   return (
     <div className="flex h-full w-full gap-0 bg-[#3c4043]">
-      {/* Numbers Section - grid-rows-4 add kiya, h-full button mein */}
+      {/* Numbers Section */}
       <div className="grid grid-cols-3 grid-rows-4 w-full">
         {numericKeys.map((num) => (
           <Button
@@ -19,15 +19,19 @@ const Keypad = ({ onAction, onCalculate, onClear }) => {
         ))}
       </div>
 
-      {/* Operators Section - 1 column, zero gap */}
-      <div className="grid grid-cols-1 w-1/4  border-l border-gray-600">
+      {/* Operators Section */}
+      <div className="grid grid-cols-1 w-1/4 border-l border-gray-600">
         {operatorKeys.map((op) => (
           <Button
             key={op}
             label={op}
             variant="basicOp"
-            onclick={op === "AC" ? onClear : () => onAction(op)}
-
+            // Yahan check karein: AC hai to clear, ⌫ hai to delete, baki to normal action
+            onclick={
+              op === "AC" ? onClear : 
+              op === "⌫" ? onDelete : 
+              () => onAction(op)
+            }
           />
         ))}
       </div>

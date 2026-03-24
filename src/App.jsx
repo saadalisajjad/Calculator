@@ -78,6 +78,7 @@ const App = () => {
               onAction={handleAction}
               onCalculate={calculateResult}
               onClear={clearExpression}
+              onDelete={handleDeleteAction}
             />
           </div>
           <div
@@ -100,6 +101,7 @@ const App = () => {
               onAction={handleAction}
               onCalculate={calculateResult}
               onClear={clearExpression}
+              onDelete={handleDeleteAction}
             />
           </div>
           <div className="w-[60%] border-l border-gray-600 dark:border-gray-800 bg-[#00796b] dark:bg-[#004d40]">

@@ -37,7 +37,7 @@ const App = () => {
     addToExpression(val);
     gsap.fromTo(displayAreaRef.current, 
       { backgroundColor: "rgba(0, 121, 107, 0.1)" }, 
-      { backgroundColor: "white", duration: 0.4, ease: "power1.out" }
+      { backgroundColor: "transparent", duration: 0.4, ease: "power1.out" }
     );
   };
 
@@ -45,13 +45,14 @@ const App = () => {
     deleteLast();
     gsap.fromTo(displayAreaRef.current, 
       { backgroundColor: "rgba(255, 0, 0, 0.05)" }, 
-      { backgroundColor: "white", duration: 0.3, ease: "power1.out" }
+      { backgroundColor: "transparent", duration: 0.3, ease: "power1.out" }
     );
   };
 
   return (
+    // bg-white light mode, bg-black dark mode - automatic system setting se
     <div 
-      className="w-full bg-white flex flex-col font-[Arial]"
+      className="w-full bg-white dark:bg-black flex flex-col font-[Arial]"
       style={{ height: '100dvh', overflow: 'hidden', maxWidth: '100vw' }}
     >
       
@@ -61,12 +62,10 @@ const App = () => {
       </div>
 
       {/* Controls */}
-      <div className="w-full bg-[#3c4043] flex-shrink-0">
+      <div className="w-full bg-[#3c4043] dark:bg-[#0a0a0a] flex-shrink-0">
 
         {/* MOBILE */}
-        <div className="relative md:hidden border-t border-gray-600">
-          
-          {/* pr-7 = 28px space right mein taake green strip overlap na kare */}
+        <div className="relative md:hidden border-t border-gray-600 dark:border-gray-800">
           <div className="pr-7">
             <Keypad 
               onAction={handleAction}
@@ -74,11 +73,9 @@ const App = () => {
               onClear={clearExpression}
             />
           </div>
-
-          {/* Scientific Panel */}
           <div 
             ref={scientificPanelRef}
-            className="absolute top-0 right-0 h-full w-[80%] bg-[#00796b] overflow-hidden z-50"
+            className="absolute top-0 right-0 h-full w-[80%] bg-[#00796b] dark:bg-[#004d40] overflow-hidden z-50"
           >
             <ScientificPanel 
               onAction={handleAction}
@@ -90,7 +87,7 @@ const App = () => {
         </div>
 
         {/* DESKTOP */}
-        <div className="hidden md:flex w-full border-t border-gray-600">
+        <div className="hidden md:flex w-full border-t border-gray-600 dark:border-gray-800">
           <div className="w-[40%]">
             <Keypad 
               onAction={handleAction}
@@ -98,7 +95,7 @@ const App = () => {
               onClear={clearExpression}
             />
           </div>
-          <div className="w-[60%] border-l border-gray-600 bg-[#00796b]">
+          <div className="w-[60%] border-l border-gray-600 dark:border-gray-800 bg-[#00796b] dark:bg-[#004d40]">
             <ScientificPanel 
               onAction={handleAction}
               onDelete={handleDeleteAction}

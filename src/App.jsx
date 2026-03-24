@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useCalculator } from './Hooks/useCalculator'; 
+import { useCalculator } from './Hooks/useCalculator';
 import Display from './Components/Display';
 import Keypad from './Components/Keypad';
 import ScientificPanel from './Components/ScientificPanel';
@@ -8,7 +8,7 @@ import gsap from 'gsap';
 const App = () => {
   const { expression, result, liveResult, addToExpression, clearExpression, deleteLast, calculateResult } = useCalculator();
   const [panelState, setPanelState] = useState(0);
-  
+
   const displayAreaRef = useRef(null);
   const scientificPanelRef = useRef(null);
 
@@ -29,33 +29,40 @@ const App = () => {
     }
   }, [panelState]);
 
-  const handlePanelToggle = () => {
-    setPanelState((prev) => (prev + 1) % 3);
-  };
 
+  const handlePanelToggle = () => {
+    setPanelState((prev) => {
+      if (prev === 0) return 1;
+      return 0;
+    });
+  };
   const handleAction = (val) => {
+    if (val === 'INV_SWITCH') {
+      setPanelState(prev => prev === 1 ? 2 : 1);
+      return;
+    }
     addToExpression(val);
-    gsap.fromTo(displayAreaRef.current, 
-      { backgroundColor: "rgba(0, 121, 107, 0.1)" }, 
+    gsap.fromTo(displayAreaRef.current,
+      { backgroundColor: "rgba(0, 121, 107, 0.1)" },
       { backgroundColor: "transparent", duration: 0.4, ease: "power1.out" }
     );
   };
 
   const handleDeleteAction = () => {
     deleteLast();
-    gsap.fromTo(displayAreaRef.current, 
-      { backgroundColor: "rgba(255, 0, 0, 0.05)" }, 
+    gsap.fromTo(displayAreaRef.current,
+      { backgroundColor: "rgba(255, 0, 0, 0.05)" },
       { backgroundColor: "transparent", duration: 0.3, ease: "power1.out" }
     );
   };
 
   return (
-    // bg-white light mode, bg-black dark mode - automatic system setting se
-    <div 
+
+    <div
       className="w-full bg-white dark:bg-black flex flex-col font-[Arial]"
       style={{ height: '100dvh', overflow: 'hidden', maxWidth: '100vw' }}
     >
-      
+
       {/* Display Area */}
       <div ref={displayAreaRef} className="flex-1 overflow-hidden transition-all">
         <Display expression={expression} result={result} liveResult={liveResult} />
@@ -67,17 +74,17 @@ const App = () => {
         {/* MOBILE */}
         <div className="relative md:hidden border-t border-gray-600 dark:border-gray-800">
           <div className="pr-7">
-            <Keypad 
+            <Keypad
               onAction={handleAction}
-              onCalculate={calculateResult} 
+              onCalculate={calculateResult}
               onClear={clearExpression}
             />
           </div>
-          <div 
+          <div
             ref={scientificPanelRef}
             className="absolute top-0 right-0 h-full w-[80%] bg-[#00796b] dark:bg-[#004d40] overflow-hidden z-50"
           >
-            <ScientificPanel 
+            <ScientificPanel
               onAction={handleAction}
               onDelete={handleDeleteAction}
               panelState={panelState}
@@ -89,14 +96,14 @@ const App = () => {
         {/* DESKTOP */}
         <div className="hidden md:flex w-full border-t border-gray-600 dark:border-gray-800">
           <div className="w-[40%]">
-            <Keypad 
+            <Keypad
               onAction={handleAction}
-              onCalculate={calculateResult} 
+              onCalculate={calculateResult}
               onClear={clearExpression}
             />
           </div>
           <div className="w-[60%] border-l border-gray-600 dark:border-gray-800 bg-[#00796b] dark:bg-[#004d40]">
-            <ScientificPanel 
+            <ScientificPanel
               onAction={handleAction}
               onDelete={handleDeleteAction}
               panelState={panelState}

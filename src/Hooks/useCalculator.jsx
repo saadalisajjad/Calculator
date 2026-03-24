@@ -8,7 +8,7 @@ export const useCalculator = () => {
   const [result, setResult] = useState("");
   const [liveResult, setLiveResult] = useState(""); // Live preview add kiya
 
-  // Har expression change par live calculate karo
+
   useEffect(() => {
     if (!expression) {
       setLiveResult("");
@@ -36,17 +36,17 @@ export const useCalculator = () => {
   const addToExpression = (value) => {
     // Mapping symbols to MathJS format
     const mapping = {
-      '×': '*', 
-      '÷': '/', 
-      '−': '-', 
-      'π': 'pi', 
+      '×': '*',
+      '÷': '/',
+      '−': '-',
+      'π': 'pi',
       'e': 'e',
-      'log': 'log10(', 
-      'ln': 'log(', 
-      'sin': 'sin(', 
+      'log': 'log10(',
+      'ln': 'log(',
+      'sin': 'sin(',
       'cos': 'cos(',
-      'tan': 'tan(', 
-      '√': 'sqrt(', 
+      'tan': 'tan(',
+      '√': 'sqrt(',
       'x!': '!',
       'exp': 'exp(',
       'x²': '^2',
@@ -56,9 +56,9 @@ export const useCalculator = () => {
     };
 
     const val = mapping[value] || value;
-    
+
     if (result === "Syntax Error" || result === "Math Error") {
-        setResult("");
+      setResult("");
     }
 
     setExpression((prev) => prev + val);
@@ -66,18 +66,18 @@ export const useCalculator = () => {
 
   const calculateResult = () => {
     if (!expression) return;
-    
+
     try {
       let finalExpr = expression;
       const openBrackets = (finalExpr.match(/\(/g) || []).length;
       const closeBrackets = (finalExpr.match(/\)/g) || []).length;
-      
+
       for (let i = 0; i < openBrackets - closeBrackets; i++) {
         finalExpr += ")";
       }
 
       const evalResult = math.evaluate(finalExpr);
-      
+
       if (!isFinite(evalResult)) {
         setResult("Math Error");
       } else {

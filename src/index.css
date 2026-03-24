@@ -8,3 +8,22 @@ html, body {
   height: 100%;
   width: 100%;
 }
+@media (prefers-color-scheme: dark) {
+  .dark\:bg-black { background-color: black; }
+  .dark\:bg-\[#0a0a0a\] { background-color: #0a0a0a; }
+  .dark\:bg-\[#004d40\] { background-color: #004d40; }
+  .dark\:text-white { color: white; }
+  .dark\:border-gray-800 { border-color: #1f2937; }
+  .dark\:bg-\[#1c1c1e\] { background-color: #1c1c1e; }
+  .dark\:bg-\[#2c2c2e\] { background-color: #2c2c2e; }
+  .dark\:bg-\[#005f56\] { background-color: #005f56; }
+  .dark\:bg-\[#00bfa5\] { background-color: #00bfa5; }
+  .dark\:text-black { color: black; }
+  .dark\:bg-\[#3a3a3c\] { background-color: #3a3a3c; }
+  .dark\:bg-\[#00796b\] { background-color: #00796b; }
+  .dark\:hover\:bg-\[#2c2c2e\]:hover { background-color: #2c2c2e; }
+  .dark\:hover\:bg-\[#3a3a3c\]:hover { background-color: #3a3a3c; }
+  .dark\:hover\:bg-\[#00796b\]:hover { background-color: #00796b; }
+  .dark\:hover\:bg-\[#1de9b6\]:hover { background-color: #1de9b6; }
+  .dark\:bg-gray-600 { background-color: #4b5563; }
+}

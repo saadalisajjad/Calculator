@@ -6,20 +6,21 @@ const ScientificPanel = ({ onAction, onDelete, panelState, onToggle }) => {
     const advGroup2 = ['deg', 'rad', 'inv', 'sin', 'asin', 'mod', 'cos', 'acos', 'nPr', 'tan', 'atan', 'nCr'];
 
     return (
-        <div className="flex h-full w-full">
+        <div className="flex h-full w-full ">
 
             {/* Peek Strip - sirf mobile par, hamesha visible */}
           <div 
     onClick={onToggle}
-    className="md:hidden flex-shrink-0 w-7 h-full h-full bg-[#00695c] flex items-center justify-center "
+    className="md:hidden flex-shrink-0 w-10 h-full bg-[#00695c] flex items-center justify-center "
 >
+    {/* span hata diya - koi text nahi */}
 </div>
 
             {/* Panel Content - onClick hata diya */}
             <div className="flex flex-col md:flex-row h-full w-full">
 
                 {/* Group 1 */}
-                <div className={`${panelState === 2 ? 'hidden md:grid' : 'grid'} grid-cols-4 w-full md:w-[57%]`}>
+                <div className={`${panelState === 2 ? 'hidden md:grid' : 'grid'} grid-cols-3 w-full md:w-[57%]`}>
                     {advGroup1.map((f) => (
                         <Button 
                             key={f} 

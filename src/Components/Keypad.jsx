@@ -7,7 +7,7 @@ const Keypad = ({ onAction, onCalculate, onClear }) => {
   return (
     <div className="flex h-full w-full gap-0 bg-[#3c4043]"> 
       {/* Numbers Section - grid-rows-4 add kiya, h-full button mein */}
-      <div className="grid grid-cols-3 grid-rows-4 w-3/4 gap-0">
+      <div className="grid grid-cols-3 grid-rows-4 w-full">
         {numericKeys.map((num) => (
           <Button
             key={num}

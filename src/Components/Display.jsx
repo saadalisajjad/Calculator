@@ -1,27 +1,26 @@
 const Display = ({ expression, result, liveResult }) => {
-    return (
-        <div className="bg-[#f1f3f4] p-6 flex flex-col justify-start items-end gap-3">
+    const output = result || liveResult;
 
-            {/* Section 1 - Input */}
-            <div className="text-[#202124] text-2xl font-bold w-full text-right min-h-[40px] break-all">
+    return (
+        <div className="flex flex-col justify-start overflow-hidden">
+
+            {/* Expression */}
+            <div className="text-[#202124] text-2xl font-normal w-full text-right break-all overflow-hidden px-4 pt-4">
                 {expression || ""}
             </div>
 
-            {/* Divider */}
-            <div className="w-full h-[1px] bg-gray-300"></div>
+            {/* Line aur Result - sirf tab show ho jab output ho */}
+            {output && (
+                <>
+                    {/* Full width line */}
+                    <div className="w-full h-[1px] bg-gray-300 mt-2 mb-2"></div>
 
-            {/* Section 2 - Live Dim Preview */}
-            <div className="text-gray-400 text-3xl font-normal w-full text-right min-h-[40px]">
-                {liveResult || ""}
-            </div>
-
-            {/* Divider */}
-            <div className="w-full h-[1px] bg-gray-300"></div>
-
-            {/* Section 3 - Bold Final Output */}
-            <div className="text-[#202124] text-5xl font-bold w-full text-right min-h-[60px]">
-                {result || "0"}
-            </div>
+                    {/* Result - simple, no bold */}
+                    <div className="text-[#202124] text-4xl font-normal w-full text-right overflow-hidden px-4">
+                        {output}
+                    </div>
+                </>
+            )}
 
         </div>
     );

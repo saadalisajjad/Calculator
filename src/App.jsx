@@ -12,6 +12,7 @@ const App = () => {
   const displayAreaRef = useRef(null);
   const scientificPanelRef = useRef(null);
 
+  // Initial setup for mobile peek
   useEffect(() => {
     if (scientificPanelRef.current && window.innerWidth < 768) {
       const panelWidth = scientificPanelRef.current.offsetWidth;
@@ -19,6 +20,7 @@ const App = () => {
     }
   }, []);
 
+  // Animation logic
   useEffect(() => {
     if (!scientificPanelRef.current || window.innerWidth >= 768) return;
     const panelWidth = scientificPanelRef.current.offsetWidth;
@@ -29,18 +31,21 @@ const App = () => {
     }
   }, [panelState]);
 
-
-  const handlePanelToggle = () => {
-    setPanelState((prev) => {
-      if (prev === 0) return 1;
-      return 0;
-    });
-  };
-  const handleAction = (val) => {
-    if (val === 'INV_SWITCH') {
-      setPanelState(prev => prev === 1 ? 2 : 1);
-      return;
+  // Fixed Toggle Logic for Arrows
+  const handlePanelToggle = (direction) => {
+    if (direction === 'LEFT') {
+      setPanelState(0); // Left arrow: Direct Close
+    } else if (direction === 'RIGHT') {
+      // Right arrow: Switch between state 1 and 2
+      setPanelState((prev) => (prev === 1 ? 2 : 1));
+    } else {
+      // Default strip click: Open first panel
+      if (panelState === 0) setPanelState(1);
     }
+  };
+
+  // Fixed handleAction (Removed syntax error)
+  const handleAction = (val) => {
     addToExpression(val);
     gsap.fromTo(displayAreaRef.current,
       { backgroundColor: "rgba(0, 121, 107, 0.1)" },
@@ -57,12 +62,10 @@ const App = () => {
   };
 
   return (
-
     <div
       className="w-full bg-white dark:bg-black flex flex-col font-[Arial]"
       style={{ height: '100dvh', overflow: 'hidden', maxWidth: '100vw' }}
     >
-
       {/* Display Area */}
       <div ref={displayAreaRef} className="flex-1 overflow-hidden transition-all">
         <Display expression={expression} result={result} liveResult={liveResult} />
@@ -70,8 +73,8 @@ const App = () => {
 
       {/* Controls */}
       <div className="w-full bg-[#3c4043] dark:bg-[#0a0a0a] flex-shrink-0">
-
-        {/* MOBILE */}
+        
+        {/* MOBILE VIEW */}
         <div className="relative md:hidden border-t border-gray-600 dark:border-gray-800">
           <div className="pr-7">
             <Keypad
@@ -94,7 +97,7 @@ const App = () => {
           </div>
         </div>
 
-        {/* DESKTOP */}
+        {/* DESKTOP VIEW */}
         <div className="hidden md:flex w-full border-t border-gray-600 dark:border-gray-800">
           <div className="w-[40%]">
             <Keypad

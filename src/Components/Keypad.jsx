@@ -6,28 +6,28 @@ const Keypad = ({ onAction, onCalculate, onClear }) => {
 
   return (
     <div className="flex h-full w-full gap-0 bg-[#3c4043]"> 
-      {/* Numbers Section - 3 columns, zero gap */}
-      <div className="grid grid-cols-3 w-3/4 gap-0">
+      {/* Numbers Section - grid-rows-4 add kiya, h-full button mein */}
+      <div className="grid grid-cols-3 grid-rows-4 w-3/4 gap-0">
         {numericKeys.map((num) => (
           <Button
             key={num}
             label={num}
             variant="number"
             onclick={num === "=" ? onCalculate : () => onAction(num)}
-            className="border-r border-b border-gray-600/50" 
+            className=" border-gray-600/50 h-full" 
           />
         ))}
       </div>
 
       {/* Operators Section - 1 column, zero gap */}
-      <div className="grid grid-cols-1 w-1/4 gap-0 border-l border-gray-600">
+      <div className="grid grid-cols-1 w-1/4  border-l border-gray-600">
         {operatorKeys.map((op) => (
           <Button
             key={op}
             label={op}
             variant="basicOp"
             onclick={op === "AC" ? onClear : () => onAction(op)}
-            className="border-b border-gray-500/50"
+            
           />
         ))}
       </div>

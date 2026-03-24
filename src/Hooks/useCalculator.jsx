@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { create, all } from 'mathjs';
 
 const math = create(all);
@@ -6,6 +6,32 @@ const math = create(all);
 export const useCalculator = () => {
   const [expression, setExpression] = useState("");
   const [result, setResult] = useState("");
+  const [liveResult, setLiveResult] = useState(""); // Live preview add kiya
+
+  // Har expression change par live calculate karo
+  useEffect(() => {
+    if (!expression) {
+      setLiveResult("");
+      return;
+    }
+    try {
+      let finalExpr = expression;
+      const openBrackets = (finalExpr.match(/\(/g) || []).length;
+      const closeBrackets = (finalExpr.match(/\)/g) || []).length;
+      for (let i = 0; i < openBrackets - closeBrackets; i++) {
+        finalExpr += ")";
+      }
+      const evalResult = math.evaluate(finalExpr);
+      if (!isFinite(evalResult)) {
+        setLiveResult("");
+      } else {
+        const formatted = math.format(evalResult, { precision: 10 });
+        setLiveResult(formatted.toString());
+      }
+    } catch {
+      setLiveResult(""); // Error par khali rakho
+    }
+  }, [expression]);
 
   const addToExpression = (value) => {
     // Mapping symbols to MathJS format
@@ -31,7 +57,6 @@ export const useCalculator = () => {
 
     const val = mapping[value] || value;
     
-    // Agar result pehle se error show kar raha hai, toh naya type karne par clear kar do
     if (result === "Syntax Error" || result === "Math Error") {
         setResult("");
     }
@@ -43,7 +68,6 @@ export const useCalculator = () => {
     if (!expression) return;
     
     try {
-      // Step 1: Automatically close brackets agar user bhool gaya hai
       let finalExpr = expression;
       const openBrackets = (finalExpr.match(/\(/g) || []).length;
       const closeBrackets = (finalExpr.match(/\)/g) || []).length;
@@ -52,14 +76,11 @@ export const useCalculator = () => {
         finalExpr += ")";
       }
 
-      // Step 2: Evaluate using mathjs
       const evalResult = math.evaluate(finalExpr);
       
-      // Step 3: Handle Infinity or NaN
       if (!isFinite(evalResult)) {
         setResult("Math Error");
       } else {
-        // Limit decimals for clean look
         const formatted = math.format(evalResult, { precision: 10 });
         setResult(formatted.toString());
       }
@@ -72,13 +93,14 @@ export const useCalculator = () => {
   const clearExpression = () => {
     setExpression("");
     setResult("");
+    setLiveResult(""); // Clear par liveResult bhi reset
   };
 
   const deleteLast = () => {
     setExpression((prev) => prev.slice(0, -1));
   };
 
-  return { expression, result, addToExpression, clearExpression, deleteLast, calculateResult };
+  return { expression, result, liveResult, addToExpression, clearExpression, deleteLast, calculateResult };
 };
 
 export default useCalculator;

@@ -1,20 +1,28 @@
-const Display = ({ expression, result }) => {
+const Display = ({ expression, result, liveResult }) => {
     return (
-        // Chrome style: Light background (#f1f3f4) aur rounded corners ke baghair
-        <div className="bg-[#f1f3f4] p-8 min-h-[180px] flex flex-col justify-end items-end overflow-hidden border-b border-gray-300">
-            
-            {/* Upper Expression (Grey Text) */}
-            <div className="text-gray-500 text-2xl font-light truncate w-full text-right mb-2">
+        <div className="bg-[#f1f3f4] p-6 flex flex-col justify-start items-end gap-3">
+
+            {/* Section 1 - Input */}
+            <div className="text-[#202124] text-2xl font-bold w-full text-right min-h-[40px] break-all">
                 {expression || ""}
             </div>
 
-            {/* Divider Line (Chrome Style) */}
-            <div className="w-full h-[1px] bg-gray-300 my-4"></div>
+            {/* Divider */}
+            <div className="w-full h-[1px] bg-gray-300"></div>
 
-            {/* Main Result (Dark/Black Text) */}
-            <div className="text-[#202124] text-6xl font-normal truncate w-full text-right">
+            {/* Section 2 - Live Dim Preview */}
+            <div className="text-gray-400 text-3xl font-normal w-full text-right min-h-[40px]">
+                {liveResult || ""}
+            </div>
+
+            {/* Divider */}
+            <div className="w-full h-[1px] bg-gray-300"></div>
+
+            {/* Section 3 - Bold Final Output */}
+            <div className="text-[#202124] text-5xl font-bold w-full text-right min-h-[60px]">
                 {result || "0"}
             </div>
+
         </div>
     );
 };

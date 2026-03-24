@@ -7,12 +7,15 @@ import gsap from 'gsap';
 
 const App = () => {
   const { expression, result, liveResult, addToExpression, clearExpression, deleteLast, calculateResult } = useCalculator();
+  
+  // States for panel management
   const [panelState, setPanelState] = useState(0);
+  const [isGoingBack, setIsGoingBack] = useState(false); 
 
   const displayAreaRef = useRef(null);
   const scientificPanelRef = useRef(null);
 
-  // Initial setup for mobile peek
+  // Initial setup for mobile peek (Positioning panel at the edge)
   useEffect(() => {
     if (scientificPanelRef.current && window.innerWidth < 768) {
       const panelWidth = scientificPanelRef.current.offsetWidth;
@@ -20,7 +23,7 @@ const App = () => {
     }
   }, []);
 
-  // Animation logic
+  // Animation logic using GSAP
   useEffect(() => {
     if (!scientificPanelRef.current || window.innerWidth >= 768) return;
     const panelWidth = scientificPanelRef.current.offsetWidth;
@@ -31,20 +34,28 @@ const App = () => {
     }
   }, [panelState]);
 
-  // Fixed Toggle Logic for Arrows
-  const handlePanelToggle = (direction) => {
-    if (direction === 'LEFT') {
-      setPanelState(0); // Left arrow: Direct Close
-    } else if (direction === 'RIGHT') {
-      // Right arrow: Switch between state 1 and 2
-      setPanelState((prev) => (prev === 1 ? 2 : 1));
-    } else {
-      // Default strip click: Open first panel
-      if (panelState === 0) setPanelState(1);
-    }
+  // Zig-Zag Logic: 0 -> 1 -> 2 -> 1 -> 0
+  const handlePanelToggle = () => {
+    setPanelState((prev) => {
+      if (prev === 0) {
+        setIsGoingBack(false); 
+        return 1;
+      }
+      if (prev === 1) {
+        if (isGoingBack) {
+          return 0; // Wapas aate waqt 1 se 0 par jao
+        } else {
+          return 2; // Aage jaate waqt 1 se 2 par jao
+        }
+      }
+      if (prev === 2) {
+        setIsGoingBack(true); // Peak point reached, now turn back
+        return 1;
+      }
+      return 0;
+    });
   };
 
-  // Fixed handleAction (Removed syntax error)
   const handleAction = (val) => {
     addToExpression(val);
     gsap.fromTo(displayAreaRef.current,
@@ -71,12 +82,12 @@ const App = () => {
         <Display expression={expression} result={result} liveResult={liveResult} />
       </div>
 
-      {/* Controls */}
+      {/* Controls Container */}
       <div className="w-full bg-[#3c4043] dark:bg-[#0a0a0a] flex-shrink-0">
         
-        {/* MOBILE VIEW */}
+        {/* MOBILE VIEW (Standard Keypad + Floating Scientific Panel) */}
         <div className="relative md:hidden border-t border-gray-600 dark:border-gray-800">
-          <div className="pr-7">
+          <div className="pr-7"> {/* Padding for the peek strip */}
             <Keypad
               onAction={handleAction}
               onCalculate={calculateResult}
@@ -86,7 +97,7 @@ const App = () => {
           </div>
           <div
             ref={scientificPanelRef}
-            className="absolute top-0 right-0 h-full w-[80%] bg-[#00796b] dark:bg-[#004d40] overflow-hidden z-50"
+            className="absolute top-0 right-0 h-full w-[80%] bg-[#00796b] dark:bg-[#004d40] overflow-hidden z-50 shadow-2xl"
           >
             <ScientificPanel
               onAction={handleAction}
@@ -97,7 +108,7 @@ const App = () => {
           </div>
         </div>
 
-        {/* DESKTOP VIEW */}
+        {/* DESKTOP VIEW (Side-by-Side Keypad and Scientific Panel) */}
         <div className="hidden md:flex w-full border-t border-gray-600 dark:border-gray-800">
           <div className="w-[40%]">
             <Keypad

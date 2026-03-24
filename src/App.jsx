@@ -50,23 +50,32 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-[Arial] overflow-hidden">
+    <div 
+      className="w-full bg-white flex flex-col font-[Arial]"
+      style={{ height: '100dvh', overflow: 'hidden', maxWidth: '100vw' }}
+    >
       
-      {/* Display Area - scrollable upar wala hissa */}
-      <div ref={displayAreaRef} className="flex-grow overflow-y-auto p-0 transition-all">
+      {/* Display Area */}
+      <div ref={displayAreaRef} className="flex-1 overflow-hidden transition-all">
         <Display expression={expression} result={result} liveResult={liveResult} />
       </div>
 
-      {/* Controls - FIXED at bottom, hamesha apni jagah */}
+      {/* Controls */}
       <div className="w-full bg-[#3c4043] flex-shrink-0">
 
-        {/* MOBILE LAYOUT */}
+        {/* MOBILE */}
         <div className="relative md:hidden border-t border-gray-600">
-          <Keypad 
-            onAction={handleAction}
-            onCalculate={calculateResult} 
-            onClear={clearExpression}
-          />
+          
+          {/* pr-7 = 28px space right mein taake green strip overlap na kare */}
+          <div className="pr-7">
+            <Keypad 
+              onAction={handleAction}
+              onCalculate={calculateResult} 
+              onClear={clearExpression}
+            />
+          </div>
+
+          {/* Scientific Panel */}
           <div 
             ref={scientificPanelRef}
             className="absolute top-0 right-0 h-full w-[80%] bg-[#00796b] overflow-hidden z-50"
@@ -80,7 +89,7 @@ const App = () => {
           </div>
         </div>
 
-        {/* DESKTOP LAYOUT */}
+        {/* DESKTOP */}
         <div className="hidden md:flex w-full border-t border-gray-600">
           <div className="w-[40%]">
             <Keypad 

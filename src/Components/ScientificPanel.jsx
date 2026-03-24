@@ -1,50 +1,40 @@
 import React from 'react';
-import Button from "./Button"; 
+import Button from "./Button";
 
 const ScientificPanel = ({ onAction, onDelete, panelState, onToggle }) => {
-    const advGroup1 = ['⌫', 'rnd', '!', '(', ')', 'e', 'ln', 'log', 'exp', '1/x', '^', 'sqrt', '+/-', '%', '^2', 'pi'];
-    const advGroup2 = ['deg', 'rad', 'inv', 'sin', 'asin', 'mod', 'cos', 'acos', 'nPr', 'tan', 'atan', 'nCr'];
+
+    const advGroup1 = ['rnd', '!', '(', ')', 'e', 'ln', 'log', 'exp', '1/x', '^', 'sqrt'];
+    const advGroup2 = ['sin', 'asin', 'cos', 'acos', 'tan', 'atan', 'nPr', 'nCr', 'mod', 'deg', 'rad', 'pi'];
 
     return (
-        <div className="flex h-full w-full ">
+        <div className="flex h-full w-full overflow-hidden">
 
-            {/* Peek Strip - sirf mobile par, hamesha visible */}
-          <div 
-    onClick={onToggle}
-    className="md:hidden flex-shrink-0 w-10 h-full bg-[#00695c] flex items-center justify-center "
->
-    {/* span hata diya - koi text nahi */}
-</div>
+            <div
+                onClick={onToggle}
+                className="md:hidden flex-shrink-0 w-10 h-full bg-[#00695c] flex items-center justify-center cursor-pointer active:bg-[#004d40] border-r border-[#004d40]/50"
+            >
+                <span className="text-white text-2xl font-bold">‹</span>
+            </div>
 
-            {/* Panel Content - onClick hata diya */}
-            <div className="flex flex-col md:flex-row h-full w-full">
+            <div className="flex flex-col md:flex-row h-full w-full relative">
 
-                {/* Group 1 */}
-                <div className={`${panelState === 2 ? 'hidden md:grid' : 'grid'} grid-cols-3 w-full md:w-[57%]`}>
+                <div className={`${panelState === 2 ? 'hidden md:grid' : 'grid'} grid-cols-3 w-full md:w-[60%] gap-0`}>
                     {advGroup1.map((f) => (
-                        <Button 
-                            key={f} 
-                            label={f === 'sqrt' ? '√' : f === 'pi' ? 'π' : f === '!' ? 'x!' : f === '^2' ? 'x²' : f} 
-                            variant="adv1" 
-                            onclick={f === '⌫' ? onDelete : () => onAction(f)} 
-                            className="border-r border-b border-[#00695c]/50 h-14 md:h-full text-base font-sans"
-                        />
+                        <Button key={f} label={f === 'sqrt' ? '√' : f} variant="adv1" onclick={() => onAction(f)}
+                            className="border-r border-b border-[#00695c]/40 h-16 md:h-full" />
                     ))}
+
+                    <Button label="INV" variant="adv1" onclick={() => onAction('INV_SWITCH')}
+                        className="border-r border-b border-[#00695c]/40 h-16 md:h-full bg-[#004d40] font-bold" />
                 </div>
 
-                {/* Group 2 */}
-                <div className={`${panelState === 1 ? 'hidden md:grid' : 'grid'} grid-cols-3 w-full md:w-[43%] md:border-l border-gray-600/30`}>
+
+                <div className={`${panelState === 1 ? 'hidden md:grid' : 'grid'} grid-cols-3 w-full md:w-[40%] gap-0 md:border-l border-gray-600/30`}>
                     {advGroup2.map((f) => (
-                        <Button 
-                            key={f} 
-                            label={f} 
-                            variant="adv2" 
-                            onclick={() => onAction(f)} 
-                            className="border-r border-b border-[#16d1a4]/30 h-14 md:h-full text-base font-sans"
-                        />
+                        <Button key={f} label={f === 'pi' ? 'π' : f} variant="adv2" onclick={() => onAction(f)}
+                            className="border-r border-b border-[#16d1a4]/20 h-16 md:h-full" />
                     ))}
                 </div>
-
             </div>
         </div>
     );

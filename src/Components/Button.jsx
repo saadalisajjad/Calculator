@@ -11,7 +11,7 @@ const Button = ({ label, onclick, variant = "default", className = "" }) => {
     };
 
     return (
-        <button 
+        <button
             onClick={() => onclick(label)}
             style={{ fontFamily: 'Arial, sans-serif' }}
             className={`

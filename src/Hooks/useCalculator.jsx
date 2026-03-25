@@ -6,8 +6,7 @@ const math = create(all);
 export const useCalculator = () => {
   const [expression, setExpression] = useState("");
   const [result, setResult] = useState("");
-  const [liveResult, setLiveResult] = useState(""); // Live preview add kiya
-
+  const [liveResult, setLiveResult] = useState("");
 
   useEffect(() => {
     if (!expression) {
@@ -29,12 +28,11 @@ export const useCalculator = () => {
         setLiveResult(formatted.toString());
       }
     } catch {
-      setLiveResult(""); // Error par khali rakho
+      setLiveResult("");
     }
   }, [expression]);
 
   const addToExpression = (value) => {
-    // Mapping symbols to MathJS format
     const mapping = {
       '×': '*',
       '÷': '/',
@@ -56,6 +54,19 @@ export const useCalculator = () => {
     };
 
     const val = mapping[value] || value;
+    const operators = ['+', '-', '*', '/', '^', ' mod '];
+    const isOperator = operators.includes(val);
+
+    if (result && result !== "Syntax Error" && result !== "Math Error") {
+      if (isOperator) {
+        setExpression(result + val);
+      } else {
+        setExpression(val);
+      }
+      setResult("");
+      setLiveResult("");
+      return;
+    }
 
     if (result === "Syntax Error" || result === "Math Error") {
       setResult("");
@@ -93,10 +104,17 @@ export const useCalculator = () => {
   const clearExpression = () => {
     setExpression("");
     setResult("");
-    setLiveResult(""); // Clear par liveResult bhi reset
+    setLiveResult("");
   };
 
   const deleteLast = () => {
+    // Agar result show ho raha hai toh ek click mein sab clear
+    if (result) {
+      setResult("");
+      setExpression("");
+      setLiveResult("");
+      return;
+    }
     setExpression((prev) => prev.slice(0, -1));
   };
 

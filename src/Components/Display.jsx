@@ -13,7 +13,7 @@ const Display = ({ expression, result, liveResult }) => {
             {output && (
                 <>
                     <div className="w-full h-[1px] bg-gray-300 dark:bg-gray-600 mt-2 mb-2"></div>
-                    <div className="text-[#202124] dark:text-white text-4xl font-normal w-full text-right overflow-hidden px-4">
+                    <div className="text-[#0098aa] text-#0098aa text-4xl font-normal w-full text-right overflow-hidden px-4">
                         {output}
                     </div>
                 </>
